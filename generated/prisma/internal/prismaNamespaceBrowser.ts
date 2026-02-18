@@ -90,8 +90,8 @@ export const BarbershopServiceScalarFieldEnum = {
   name: 'name',
   description: 'description',
   imageUrl: 'imageUrl',
-  priceInCents: 'priceInCents',
-  barbershopId: 'barbershopId'
+  barbershopId: 'barbershopId',
+  priceInCents: 'priceInCents'
 } as const
 
 export type BarbershopServiceScalarFieldEnum = (typeof BarbershopServiceScalarFieldEnum)[keyof typeof BarbershopServiceScalarFieldEnum]
@@ -99,11 +99,13 @@ export type BarbershopServiceScalarFieldEnum = (typeof BarbershopServiceScalarFi
 
 export const BookingScalarFieldEnum = {
   id: 'id',
+  serviceId: 'serviceId',
+  barbershopId: 'barbershopId',
+  userId: 'userId',
   date: 'date',
   cancelled: 'cancelled',
   cancelledAt: 'cancelledAt',
-  serviceId: 'serviceId',
-  barbershopId: 'barbershopId'
+  stripeChargeId: 'stripeChargeId'
 } as const
 
 export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]

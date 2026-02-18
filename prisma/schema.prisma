@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -17,27 +16,32 @@ model Barbershop {
   imageUrl    String
   phones      String[]
   services    BarbershopService[]
+  bookings    Booking[]
 }
 
 model BarbershopService {
-  id           String @id @default(uuid())
+  id           String     @id @default(uuid())
   name         String
   description  String
   imageUrl     String
-  priceInCents Int
-
   barbershopId String
   barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  priceInCents Int
+  bookings     Booking[]
 }
 
 model Booking {
-  id          String    @id @default(uuid())
-  date        DateTime  @db.Timestamptz
-  cancelled   Boolean   @default(false)
-  cancelledAt DateTime? @db.Timestamptz
-
-  serviceId    String
-  barbershopId String
+  id             String            @id @default(uuid())
+  serviceId      String
+  service        BarbershopService @relation(fields: [serviceId], references: [id])
+  barbershopId   String
+  barbershop     Barbershop        @relation(fields: [barbershopId], references: [id])
+  userId         String
+  user           User              @relation(fields: [userId], references: [id])
+  date           DateTime          @db.Timestamptz
+  cancelled      Boolean?          @default(false)
+  cancelledAt    DateTime?         @db.Timestamptz
+  stripeChargeId String?
 }
 
 model User {
@@ -47,9 +51,10 @@ model User {
   emailVerified Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+  bookings      Booking[]
 
   @@unique([email])
   @@map("user")
@@ -67,7 +72,6 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
-  @@index([userId])
   @@map("session")
 }
 
@@ -87,7 +91,6 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  @@index([userId])
   @@map("account")
 }
 
@@ -97,8 +100,7 @@ model Verification {
   value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime @default(now()) @updatedAt
 
-  @@index([identifier])
   @@map("verification")
 }
