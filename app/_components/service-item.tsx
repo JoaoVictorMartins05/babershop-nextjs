@@ -14,8 +14,8 @@ import { Calendar } from "./ui/calendar";
 import { Separator } from "./ui/separator";
 import { useState } from "react";
 import { ptBR } from "date-fns/locale";
-// import { useAction } from "next-safe-action/hooks";
-// import { createBooking } from "../_actions/create-booking";
+import { useAction } from "next-safe-action/hooks";
+import { createBooking } from "../_actions/create-booking";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { getDateAvailableTimeSlots } from "../_actions/get-date-available-time-slots";
@@ -31,7 +31,7 @@ interface ServiceItemProps {
 export function ServiceItem({ service }: ServiceItemProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
-  // const { executeAsync, isPending } = useAction(createBooking);
+  const { executeAsync, isPending } = useAction(createBooking);
   // const { executeAsync: executeCreateBookingCheckoutSession } = useAction(
   //   createBookingCheckoutSession,
   // );
@@ -45,8 +45,6 @@ export function ServiceItem({ service }: ServiceItemProps) {
       }),
     enabled: Boolean(selectedDate),
   });
-
-  // console.log("=> ", availableTimeSlots);
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
@@ -72,10 +70,10 @@ export function ServiceItem({ service }: ServiceItemProps) {
   today.setHours(0, 0, 0, 0);
 
   const handleConfirm = async () => {
-    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-      toast.error("Erro ao criar checkout session");
-      return;
-    }
+    // if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+    //   toast.error("Erro ao criar checkout session");
+    //   return;
+    // }
     if (!selectedTime || !selectedDate) {
       return;
     }
@@ -113,18 +111,18 @@ export function ServiceItem({ service }: ServiceItemProps) {
     //   return;
     // }
 
-    // const result = await executeAsync({
-    //   serviceId: service.id,
-    //   date,
-    // });
-    // if (result.serverError || result.validationErrors) {
-    //   toast.error(result.validationErrors?._errors?.[0]);
-    //   return;
-    // }
-    // toast.success("Agendamento criado com sucesso!");
-    // setSelectedDate(undefined);
-    // setSelectedTime(undefined);
-    // setSheetIsOpen(false);
+    const result = await executeAsync({
+      serviceId: service.id,
+      date,
+    });
+    if (result.serverError || result.validationErrors) {
+      toast.error(result.validationErrors?._errors?.[0]);
+      return;
+    }
+    toast.success("Agendamento criado com sucesso!");
+    setSelectedDate(undefined);
+    setSelectedTime(undefined);
+    setSheetIsOpen(false);
   };
 
   return (
@@ -231,7 +229,7 @@ export function ServiceItem({ service }: ServiceItemProps) {
               <div className="px-5 pb-6">
                 <Button
                   className="w-full rounded-full"
-                  // disabled={isConfirmDisabled || isPending}
+                  disabled={isConfirmDisabled || isPending}
                   onClick={handleConfirm}
                 >
                   Confirmar
