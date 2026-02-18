@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import Image from "next/image";
 import { BarbershopService, Barbershop } from "@/generated/prisma/client";
 import { Button } from "./ui/button";
@@ -11,15 +10,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-// import { Calendar } from "./ui/calendar";
+import { Calendar } from "./ui/calendar";
 import { Separator } from "./ui/separator";
 import { useState } from "react";
 import { ptBR } from "date-fns/locale";
-import { useAction } from "next-safe-action/hooks";
+// import { useAction } from "next-safe-action/hooks";
 // import { createBooking } from "../_actions/create-booking";
 import { toast } from "sonner";
-// import { useQuery } from "@tanstack/react-query";
-// import { getDateAvailableTimeSlots } from "../_actions/get-date-available-time-slots";
+import { useQuery } from "@tanstack/react-query";
+import { getDateAvailableTimeSlots } from "../_actions/get-date-available-time-slots";
 // import { createBookingCheckoutSession } from "../_actions/create-booking-checkout-session";
 // import { loadStripe } from "@stripe/stripe-js";
 
@@ -37,15 +36,17 @@ export function ServiceItem({ service }: ServiceItemProps) {
   //   createBookingCheckoutSession,
   // );
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
-  // const { data: availableTimeSlots } = useQuery({
-  //   queryKey: ["date-available-time-slots", service.barbershopId, selectedDate],
-  //   queryFn: () =>
-  //     getDateAvailableTimeSlots({
-  //       barbershopId: service.barbershopId,
-  //       date: selectedDate!,
-  //     }),
-  //   enabled: Boolean(selectedDate),
-  // });
+  const { data: availableTimeSlots } = useQuery({
+    queryKey: ["date-available-time-slots", service.barbershopId, selectedDate],
+    queryFn: () =>
+      getDateAvailableTimeSlots({
+        barbershopId: service.barbershopId,
+        date: selectedDate!,
+      }),
+    enabled: Boolean(selectedDate),
+  });
+
+  // console.log("=> ", availableTimeSlots);
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
@@ -168,14 +169,14 @@ export function ServiceItem({ service }: ServiceItemProps) {
           </SheetHeader>
 
           <div className="flex flex-col gap-4 px-5">
-            {/* <Calendar
+            <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={handleDateSelect}
               disabled={{ before: today }}
               className="w-full p-0"
               locale={ptBR}
-            /> */}
+            />
           </div>
 
           {selectedDate && (
@@ -183,7 +184,7 @@ export function ServiceItem({ service }: ServiceItemProps) {
               <Separator />
 
               <div className="flex gap-3 overflow-x-auto px-5 [&::-webkit-scrollbar]:hidden">
-                {/* {availableTimeSlots?.data?.map((time) => (
+                {availableTimeSlots?.data?.map((time) => (
                   <Button
                     key={time}
                     variant={selectedTime === time ? "default" : "outline"}
@@ -192,7 +193,7 @@ export function ServiceItem({ service }: ServiceItemProps) {
                   >
                     {time}
                   </Button>
-                ))} */}
+                ))}
               </div>
 
               <Separator />
