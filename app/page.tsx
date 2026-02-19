@@ -2,7 +2,6 @@ import Image from "next/image";
 import Header from "./_components/header";
 import SearchInput from "./_components/search-input";
 import banner from "../public/banner.png";
-import BookingItem from "./_components/booking-item";
 import { prisma } from "@/lib/prisma";
 import BarbershopItem from "./_components/barbershop-item";
 import Footer from "./_components/footer";
@@ -37,18 +36,6 @@ const Home = async () => {
           sizes="100vh"
           className="h-auto w-full"
         />
-        <PageSection>
-          <PageSectionTitle>Agendamentos</PageSectionTitle>
-          <BookingItem
-            serviceName={"Corte de cabelo"}
-            barbershopName={"barber 1"}
-            barbershopImageUrl={
-              "https://utfs.io/f/5832df58-cfd7-4b3f-b102-42b7e150ced2-16r.png"
-            }
-            date={new Date()}
-          />
-        </PageSection>
-
         <PageSection>
           <PageSectionTitle>Recomendados</PageSectionTitle>
           <PageSectionScroller>
