@@ -19,14 +19,17 @@ export const createBookingCheckoutSession = actionClient
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error("STRIPE_SECRET_KEY is not set");
     }
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
+
     if (!session?.user) {
       returnValidationErrors(inputSchema, {
         _errors: ["Unauthorized"],
       });
     }
+
     const service = await prisma.barbershopService.findUnique({
       where: {
         id: serviceId,
@@ -35,14 +38,17 @@ export const createBookingCheckoutSession = actionClient
         barbershop: true,
       },
     });
+
     if (!service) {
       returnValidationErrors(inputSchema, {
         _errors: ["Service not found"],
       });
     }
+
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: "2025-07-30.basil",
     });
+
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -69,5 +75,6 @@ export const createBookingCheckoutSession = actionClient
         },
       ],
     });
+
     return checkoutSession;
   });
