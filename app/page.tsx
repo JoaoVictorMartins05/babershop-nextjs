@@ -11,9 +11,10 @@ import {
   PageSectionScroller,
   PageSectionTitle,
 } from "./_components/ui/page";
+import QuickSearchButtons from "./_components/quick-search-buttons";
 
 const Home = async () => {
-  const barbershops = await prisma.barbershop.findMany({
+  const recommendedBarbershops = await prisma.barbershop.findMany({
     orderBy: {
       name: "asc",
     },
@@ -30,16 +31,20 @@ const Home = async () => {
       <Header />
       <PageContainer>
         <SearchInput />
+
+        <QuickSearchButtons />
+
         <Image
           src={banner}
           alt="Agende agora!"
-          sizes="100vh"
+          sizes="100vw"
           className="h-auto w-full"
         />
+
         <PageSection>
           <PageSectionTitle>Recomendados</PageSectionTitle>
           <PageSectionScroller>
-            {barbershops.map((barbershop) => (
+            {recommendedBarbershops.map((barbershop) => (
               <BarbershopItem key={barbershop.id} barbershop={barbershop} />
             ))}
           </PageSectionScroller>
