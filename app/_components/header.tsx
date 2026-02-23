@@ -18,11 +18,11 @@ const Header = () => {
     <header className="flex items-center justify-between bg-white px-5 py-6">
       <Image src="/logo.svg" alt="Aparatus" width={100} height={26.09} />
       <div className="flex items-center gap-2">
-        {/* <Button variant="outline" size="icon" asChild>
+        <Button variant="outline" size="icon" asChild>
           <Link href="/chat">
             <MessageCircleIcon />
           </Link>
-        </Button> */}
+        </Button>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon">
